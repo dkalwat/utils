@@ -68,6 +68,37 @@ kernel.dmesg_restrict = 1
 EOF
 sysctl -p /etc/sysctl.d/99-bootstrap-hardening.conf -q
 
+# ── vm guest agent ───────────────────────────────────────────
+log "Detecting hypervisor..."
+VIRT=$(systemd-detect-virt)
+
+case "$VIRT" in
+  kvm|qemu)
+    log "KVM/QEMU detected — installing qemu-guest-agent..."
+    apt-get install -y -qq qemu-guest-agent
+    systemctl enable --now qemu-guest-agent
+    ;;
+  vmware)
+    log "VMware detected — installing open-vm-tools..."
+    apt-get install -y -qq open-vm-tools
+    systemctl enable --now open-vm-tools
+    ;;
+  microsoft)
+    log "Hyper-V detected — installing hyperv-daemons..."
+    apt-get install -y -qq hyperv-daemons
+    ;;
+  virtualbox)
+    log "VirtualBox detected — installing guest additions..."
+    apt-get install -y -qq virtualbox-guest-utils
+    ;;
+  none)
+    log "Bare metal detected — skipping guest agent."
+    ;;
+  *)
+    warn "Unknown hypervisor ($VIRT) — skipping guest agent."
+    ;;
+esac
+
 # ── done ─────────────────────────────────────────────────────
 log "Bootstrap complete. Log out and back in (or newgrp docker) for group changes."
 log "Installed: docker $(docker --version | awk '{print $3}' | tr -d ',')"
