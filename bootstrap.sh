@@ -66,7 +66,7 @@ case "$VIRT" in
   kvm|qemu)
     log "KVM/QEMU detected — installing qemu-guest-agent..."
     apt-get install -y -qq qemu-guest-agent
-    systemctl enable --now qemu-guest-agent
+    systemctl start qemu-guest-agent || true
     ;;
   vmware)
     log "VMware detected — installing open-vm-tools..."
