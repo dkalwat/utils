@@ -19,7 +19,7 @@ timedatectl set-timezone America/New_York
 # ── system update ────────────────────────────────────────────
 log "Updating system..."
 apt-get update -qq
-apt-get upgrade -y -qq
+DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -qq
 apt-get install -y -qq \
   curl wget git vim htop tmux \
   net-tools dnsutils nmap \
