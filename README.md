@@ -1,1 +1,1 @@
-Bootstrap - curl -fsSL https://bs.kalw.at/bootstrap.sh | sudo bash
+Bootstrap - curl -fsSL https://util.kalw.at/bootstrap.sh | sudo bash
